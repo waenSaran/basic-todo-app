@@ -30,37 +30,48 @@ class _TodoListPageState extends State<TodoListPage> {
             replacement: const Center(child: CircularProgressIndicator()),
             child: RefreshIndicator(
                 onRefresh: fetchTodoList,
-                child: ListView.builder(
-                    itemCount: todoList.length,
-                    itemBuilder: (context, index) {
-                      final item = todoList[index];
-                      final id = item['_id'];
-                      return ListTile(
-                        title: Text(item['title']),
-                        subtitle: Text(item['description']),
-                        trailing: PopupMenuButton(
-                          onSelected: (value) {
-                            if (value == 'edit') {
-                              // Go to edit page
-                              navigateToEditPage(item);
-                            } else if (value == 'delete') {
-                              // Delete and remove the item
-                              deleteTaskById(id);
-                            }
-                          },
-                          itemBuilder: (context) {
-                            return [
-                              const PopupMenuItem(
-                                value: 'edit',
-                                child: Text('Edit'),
-                              ),
-                              const PopupMenuItem(
-                                  value: 'delete', child: Text('Delete')),
-                            ];
-                          },
-                        ),
-                      );
-                    }))),
+                child: Visibility(
+                  visible: todoList.isNotEmpty,
+                  replacement: Center(
+                      child: Text(
+                    'No Task!',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  )),
+                  child: ListView.builder(
+                      itemCount: todoList.length,
+                      padding: const EdgeInsets.all(10),
+                      itemBuilder: (context, index) {
+                        final item = todoList[index];
+                        final id = item['_id'];
+                        return Card(
+                          child: ListTile(
+                            title: Text(item['title']),
+                            subtitle: Text(item['description']),
+                            trailing: PopupMenuButton(
+                              onSelected: (value) {
+                                if (value == 'edit') {
+                                  // Go to edit page
+                                  navigateToEditPage(item);
+                                } else if (value == 'delete') {
+                                  // Delete and remove the item
+                                  deleteTaskById(id);
+                                }
+                              },
+                              itemBuilder: (context) {
+                                return [
+                                  const PopupMenuItem(
+                                    value: 'edit',
+                                    child: Text('Edit'),
+                                  ),
+                                  const PopupMenuItem(
+                                      value: 'delete', child: Text('Delete')),
+                                ];
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+                ))),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: navigateToAddPage,
           label: const Text("Add Task"),
