@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:basic_todo_app/screens/add-todo.dart';
 import 'package:basic_todo_app/services/todoApi.dart';
 import 'package:basic_todo_app/utils/snackbarHelper.dart';
 import 'package:basic_todo_app/widget/taskCard.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class TodoListPage extends StatefulWidget {
   const TodoListPage({super.key});
