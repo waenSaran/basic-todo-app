@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:basic_todo_app/screens/add-todo.dart';
 import 'package:basic_todo_app/services/todoApi.dart';
 import 'package:basic_todo_app/utils/snackbarHelper.dart';
+import 'package:basic_todo_app/widget/taskCard.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -44,34 +45,11 @@ class _TodoListPageState extends State<TodoListPage> {
                       padding: const EdgeInsets.all(10),
                       itemBuilder: (context, index) {
                         final item = todoList[index];
-                        final id = item['_id'];
-                        return Card(
-                          child: ListTile(
-                            title: Text(item['title']),
-                            subtitle: Text(item['description']),
-                            trailing: PopupMenuButton(
-                              onSelected: (value) {
-                                if (value == 'edit') {
-                                  // Go to edit page
-                                  navigateToEditPage(item);
-                                } else if (value == 'delete') {
-                                  // Delete and remove the item
-                                  deleteTaskById(id);
-                                }
-                              },
-                              itemBuilder: (context) {
-                                return [
-                                  const PopupMenuItem(
-                                    value: 'edit',
-                                    child: Text('Edit'),
-                                  ),
-                                  const PopupMenuItem(
-                                      value: 'delete', child: Text('Delete')),
-                                ];
-                              },
-                            ),
-                          ),
-                        );
+                        return TaskCard(
+                            index: index,
+                            item: item,
+                            navigateToEditPage: navigateToEditPage,
+                            deleteTaskById: deleteTaskById);
                       }),
                 ))),
         floatingActionButton: FloatingActionButton.extended(
