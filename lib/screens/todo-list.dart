@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:basic_todo_app/screens/add-todo.dart';
+import 'package:basic_todo_app/services/todoApi.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -102,15 +103,13 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   Future<void> fetchTodoList() async {
-    const url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as Map;
-      final result = json['items'] as List;
+    final response = await TodoServices.fetchTaskList();
+    if (response != null) {
       setState(() {
-        todoList = result;
+        todoList = response;
       });
+    } else {
+      showErrorMessage('Something went wrong!');
     }
     setState(() {
       isLoading = false;
@@ -119,10 +118,8 @@ class _TodoListPageState extends State<TodoListPage> {
 
   Future<void> deleteTaskById(String id) async {
     // Delete via api
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.delete(uri);
-    if (response.statusCode == 200) {
+    final isSuccess = await TodoServices.deleteTaskById(id);
+    if (isSuccess) {
       // Remove from the list
       final filteredItems =
           todoList.where((task) => task['_id'] != id).toList();
