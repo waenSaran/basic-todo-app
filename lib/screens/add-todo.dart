@@ -64,14 +64,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
   }
 
   void submitData() async {
-    // Get data from form
-    final title = titleController.text;
-    final description = descriptionController.text;
-    final body = {
-      "title": title,
-      "description": description,
-      "is_completed": false
-    };
     // Submit to server
     final isSuccess = await TodoServices.addTask(body);
     // Show message depends on
@@ -92,13 +84,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
       return;
     }
     final id = task['_id'];
-    final title = titleController.text;
-    final description = descriptionController.text;
-    final body = {
-      "title": title,
-      "description": description,
-      "is_completed": false
-    };
     // Submit to server
     final isSuccess = await TodoServices.updateTask(id, body);
     // Show message depends on
@@ -107,5 +92,12 @@ class _AddTodoPageState extends State<AddTodoPage> {
     } else {
       showErrorMessage(context, message: 'Sorry, try again!');
     }
+  }
+
+  Map get body {
+    // Get data from form
+    final title = titleController.text;
+    final description = descriptionController.text;
+    return {"title": title, "description": description, "is_completed": false};
   }
 }
